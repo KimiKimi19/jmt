@@ -27,18 +27,17 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.google.gson.Gson;
 import jmt.common.exception.IncorrectDistributionParameterException;
 import jmt.common.exception.LoadException;
 import jmt.common.xml.XSDSchemaLoader;
 import jmt.engine.NetStrategies.ForkStrategy;
+import jmt.engine.NetStrategies.RoutingStrategies.ClassSwitchStrategy;
 import jmt.engine.NetStrategies.RoutingStrategy;
 import jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy;
 import jmt.engine.NetStrategies.RoutingStrategies.LoadDependentRoutingParameter;
@@ -859,11 +858,18 @@ public class SimLoader {
 				//needs to get the String constructor
 				Object[] initargs = { value };
 				Class<?>[] parameterTypes = { initargs[0].getClass() };
-				Constructor<?> constr = getConstructor(c, parameterTypes);
-				if (DEBUG) {
-					System.out.println("            created subParameter");
+				Object o;
+
+				if(c.getName().equals("java.util.Map")){
+					Gson gson = new Gson();
+					o = gson.fromJson(value, new HashMap().getClass());
+				} else {
+					Constructor<?> constr = getConstructor(c, parameterTypes);
+					if (DEBUG) {
+						System.out.println("            created subParameter");
+					}
+					o = constr.newInstance(initargs);
 				}
-				Object o = constr.newInstance(initargs);
 				
 				return o;
 			} else {
