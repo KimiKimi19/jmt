@@ -43,9 +43,9 @@ public class ClassSwitch extends ServiceSection {
 
 	public ClassSwitch(Object[] matrix) {
 		this.matrix = new Float[matrix.length][matrix.length];
-		for (int i = 0; i < matrix.length; i++) {
-			Float[] row = (Float[]) matrix[i];
-			for (int j = 0; j < row.length; j++) {
+			for (int i = 0; i < matrix.length; i++) {
+				Float[] row = (Float[]) matrix[i];
+				for (int j = 0; j < row.length; j++) {
 				this.matrix[i][j] = row[j];
 			}
 		}
